@@ -47,19 +47,19 @@ a { color: inherit; text-decoration: none; }
   height: 30px;
   border: 1px solid rgba(229, 111, 61, 0.72);
   border-radius: 50%;
-  transition: width 140ms ease, height 140ms ease, opacity 140ms ease, background-color 140ms ease;
+  transition: opacity 120ms ease, background-color 120ms ease, border-color 120ms ease, box-shadow 120ms ease;
 }
 .cursor-dot.is-visible,
 .cursor-ring.is-visible { opacity: 1; }
 .cursor-ring.is-hovering {
-  width: 48px;
-  height: 48px;
   background: rgba(229, 111, 61, 0.12);
+  box-shadow: 0 0 0 4px rgba(229, 111, 61, 0.14);
 }
 .cursor-dot.is-on-accent { background: var(--ink); }
 .cursor-ring.is-on-accent { border-color: rgba(21, 20, 17, 0.82); }
-.cursor-ring.is-on-accent.is-hovering { background: rgba(21, 20, 17, 0.12); }
-.cursor-ring.is-pressed { width: 22px; height: 22px; }
+.cursor-ring.is-on-accent.is-hovering { background: rgba(21, 20, 17, 0.12); box-shadow: 0 0 0 4px rgba(21, 20, 17, 0.14); }
+.cursor-ring.is-pressed { background: rgba(229, 111, 61, 0.24); box-shadow: none; }
+.cursor-ring.is-on-accent.is-pressed { background: rgba(21, 20, 17, 0.22); }
 
 @media (pointer: fine) {
   .custom-cursor-active,

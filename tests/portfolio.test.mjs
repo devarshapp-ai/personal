@@ -84,6 +84,8 @@ test("keeps the custom cursor stable and visible on the accent panel", async () 
   assert.match(page, /classList\.toggle\("is-on-accent"/);
   assert.match(styles, /\.cursor-dot\.is-on-accent\s*\{[^}]*background:\s*var\(--ink\)/s);
   assert.match(styles, /\.cursor-ring\.is-on-accent\s*\{[^}]*border-color:/s);
+  assert.doesNotMatch(styles, /\.cursor-ring\.is-hovering\s*\{[^}]*(?:width|height):/s);
+  assert.doesNotMatch(styles, /\.cursor-ring\.is-pressed\s*\{[^}]*(?:width|height):/s);
 });
 
 test("integrates the portrait cleanly and hides only the visual scrollbar", async () => {
