@@ -9,6 +9,32 @@ const memes = [
     title: "The codefix cycle",
     description: "A little developer humour about one code fix inviting the next bug fix.",
     alt: "Black-and-white developer meme created by Devarsh Vasa about code fixes and follow-up bug fixes",
+    width: 1151,
+    height: 1367,
+  },
+  {
+    src: "/memes/bug-vs-feature-hd.png",
+    title: "Bug or feature?",
+    description: "When a small bug fix somehow becomes a feature-sized solution.",
+    alt: "Cartoon developer meme contrasting a leaking pipe labelled Bug with an elaborate fountain labelled Feature",
+    width: 1115,
+    height: 1411,
+  },
+  {
+    src: "/memes/youtube-premium-hd.png",
+    title: "YouTube Premium economics",
+    description: "Advertising logic meets one very practical budget question.",
+    alt: "Meme asking why YouTube shows expensive advertisements to someone who cannot afford YouTube Premium",
+    width: 1268,
+    height: 1241,
+  },
+  {
+    src: "/memes/resume-lightbulb-hd.png",
+    title: "Résumé translation",
+    description: "The professional way to say you changed a light bulb.",
+    alt: "Meme humorously rewriting changing a light bulb as a professional résumé achievement",
+    width: 1194,
+    height: 1317,
   },
 ] as const;
 
@@ -494,8 +520,8 @@ export default function Home() {
               <img
                 src={`${basePath}${memes[activeMemeIndex].src}`}
                 alt={memes[activeMemeIndex].alt}
-                width="1151"
-                height="1367"
+                width={memes[activeMemeIndex].width}
+                height={memes[activeMemeIndex].height}
                 decoding="async"
               />
               <figcaption>{memes[activeMemeIndex].description}</figcaption>

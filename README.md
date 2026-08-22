@@ -15,7 +15,7 @@ Highlights include:
 - custom desktop cursor with touch-friendly fallbacks
 - professional experience timeline and impact metrics
 - honest, confidence-labelled technical skills
-- personal interests beyond work
+- personal interests beyond work with a four-item interactive meme archive
 - interactive “premium unlock” joke
 - email and LinkedIn contact options
 - social-sharing artwork and metadata

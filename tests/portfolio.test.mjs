@@ -123,6 +123,12 @@ test("provides an accessible, future-ready meme archive", async () => {
   ]);
 
   assert.match(page, /rk-meme\.jpg/);
+  assert.match(page, /bug-vs-feature-hd\.png/);
+  assert.match(page, /youtube-premium-hd\.png/);
+  assert.match(page, /resume-lightbulb-hd\.png/);
+  assert.match(page, /← Previous/);
+  assert.match(page, /Next →/);
+  assert.match(page, /width=\{memes\[activeMemeIndex\]\.width\}/);
   assert.match(page, /aria-haspopup="dialog"/);
   assert.match(page, /role="dialog"/);
   assert.match(page, /aria-modal="true"/);
