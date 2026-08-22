@@ -4,7 +4,10 @@ import "./globals.css";
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
 const socialImageUrl = new URL(`${basePath}/og.png`, `${siteUrl}/`).toString();
-const faviconUrl = new URL(`${basePath}/favicon.png`, `${siteUrl}/`).toString();
+const faviconIcoUrl = new URL(`${basePath}/favicon.ico`, `${siteUrl}/`).toString();
+const favicon48Url = new URL(`${basePath}/favicon-48.png`, `${siteUrl}/`).toString();
+const favicon96Url = new URL(`${basePath}/favicon-96.png`, `${siteUrl}/`).toString();
+const appleIconUrl = new URL(`${basePath}/favicon.png`, `${siteUrl}/`).toString();
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -27,8 +30,13 @@ export const metadata: Metadata = {
     canonical: siteUrl,
   },
   icons: {
-    icon: [{ url: faviconUrl, type: "image/png", sizes: "128x128" }],
-    apple: [{ url: faviconUrl, type: "image/png", sizes: "128x128" }],
+    icon: [
+      { url: faviconIcoUrl, type: "image/x-icon", sizes: "48x48" },
+      { url: favicon48Url, type: "image/png", sizes: "48x48" },
+      { url: favicon96Url, type: "image/png", sizes: "96x96" },
+    ],
+    shortcut: faviconIcoUrl,
+    apple: [{ url: appleIconUrl, type: "image/png", sizes: "128x128" }],
   },
   openGraph: {
     title: "Devarsh Vasa — Java Backend Engineer",

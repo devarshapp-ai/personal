@@ -40,7 +40,7 @@ test("renders privacy-safe social metadata", async () => {
     /property="og:image" content="(?:https:\/\/devarsh\.online|http:\/\/localhost:3000)\/og\.png"/,
   );
   assert.match(html, /name="twitter:card" content="summary_large_image"/);
-  assert.match(html, /rel="icon"[^>]+favicon\.png/i);
+  assert.match(html, /rel="icon"[^>]+favicon-(?:48|96)\.png/i);
   assert.match(html, /rel="apple-touch-icon"[^>]+favicon\.png/i);
   assert.match(html, /class="hero-portrait"[^>]+devarsh-midnight\.webp/i);
   assert.doesNotMatch(html, /portrait-placeholder|devarsh-blue\.webp|devarsh-profile\.webp|devarsh-editorial\.png|devarsh-kumar\.png|devarsh-front\.png/i);
@@ -52,18 +52,22 @@ test("renders privacy-safe social metadata", async () => {
 });
 
 test("publishes a compliant favicon", async () => {
-  const [html, favicon] = await Promise.all([
+  const [html, favicon48, favicon96, faviconIco] = await Promise.all([
     render(),
-    readFile(new URL("../public/favicon.png", import.meta.url)),
+    readFile(new URL("../public/favicon-48.png", import.meta.url)),
+    readFile(new URL("../public/favicon-96.png", import.meta.url)),
+    readFile(new URL("../public/favicon.ico", import.meta.url)),
   ]);
 
-  assert.match(
-    html,
-    /rel="icon"[^>]+(?:https:\/\/devarsh\.online|http:\/\/localhost:3000)\/favicon\.png/i,
-  );
-  assert.equal(favicon.subarray(1, 4).toString(), "PNG");
-  assert.equal(favicon.readUInt32BE(16), 128);
-  assert.equal(favicon.readUInt32BE(20), 128);
+  assert.match(html, /rel="shortcut icon"[^>]+favicon\.ico/i);
+  assert.match(html, /rel="icon"[^>]+favicon-48\.png[^>]+sizes="48x48"/i);
+  assert.match(html, /rel="icon"[^>]+favicon-96\.png[^>]+sizes="96x96"/i);
+  assert.equal(favicon48.subarray(1, 4).toString(), "PNG");
+  assert.equal(favicon48.readUInt32BE(16), 48);
+  assert.equal(favicon48.readUInt32BE(20), 48);
+  assert.equal(favicon96.readUInt32BE(16), 96);
+  assert.equal(favicon96.readUInt32BE(20), 96);
+  assert.deepEqual([...faviconIco.subarray(0, 4)], [0, 0, 1, 0]);
 });
 
 test("adds a harmless easter egg as a top-level DOM comment", async () => {
