@@ -24,7 +24,8 @@ test("statically exports Devarsh's portfolio", async () => {
   assert.match(html, /Unlock the premium version of Devarsh Vasa/);
   assert.match(html, /devarsh\.jobs@gmail\.com/);
   assert.match(html, /Spring Boot/);
-  assert.match(html, /Strength training/);
+  assert.match(html, /Memes/);
+  assert.doesNotMatch(html, /Strength training/);
   assert.doesNotMatch(html, /Lifeline ambulance|Video chat application|Mentored 5 interns/);
   assert.doesNotMatch(html, /href=["']tel:|Confidential/i);
   assert.doesNotMatch(html, /codex-preview|react-loading-skeleton/);
@@ -113,6 +114,22 @@ test("keeps the beyond-work cards aligned and omits the old education note", asy
   assert.doesNotMatch(html, /BE in Computer Engineering|LDRP ITR/);
   assert.match(styles, /\.interest-grid article\s*\{[^}]*grid-template-rows:/s);
   assert.match(styles, /\.interest-grid small\s*\{[^}]*min-height:/s);
+});
+
+test("provides an accessible, future-ready meme archive", async () => {
+  const [page, styles] = await Promise.all([
+    source("app/page.tsx"),
+    source("app/globals.css"),
+  ]);
+
+  assert.match(page, /rk-meme\.jpg/);
+  assert.match(page, /aria-haspopup="dialog"/);
+  assert.match(page, /role="dialog"/);
+  assert.match(page, /aria-modal="true"/);
+  assert.match(page, /event\.key === "Escape"/);
+  assert.match(page, /Meme archive/);
+  assert.match(styles, /\.meme-lightbox/);
+  assert.match(styles, /\.meme-dialog/);
 });
 
 test("does not load mutable third-party analytics JavaScript", async () => {

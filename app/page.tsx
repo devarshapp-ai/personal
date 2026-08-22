@@ -3,12 +3,22 @@
 import { useEffect, useRef, useState } from "react";
 import type { FormEvent } from "react";
 
+const memes = [
+  {
+    src: "/memes/rk-meme.jpg",
+    title: "The codefix cycle",
+    description: "A little developer humour about one code fix inviting the next bug fix.",
+    alt: "Black-and-white developer meme created by Devarsh Vasa about code fixes and follow-up bug fixes",
+  },
+] as const;
+
 export default function Home() {
   const heroArtRef = useRef<HTMLDivElement>(null);
   const cursorDotRef = useRef<HTMLDivElement>(null);
   const cursorRingRef = useRef<HTMLDivElement>(null);
   const [premiumUnlocked, setPremiumUnlocked] = useState(false);
   const [visitorCount, setVisitorCount] = useState<string | null>(null);
+  const [activeMemeIndex, setActiveMemeIndex] = useState<number | null>(null);
   const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
   const formspreeId = process.env.NEXT_PUBLIC_FORMSPREE_ID;
   const goatCounterCode = process.env.NEXT_PUBLIC_GOATCOUNTER_CODE;
@@ -43,6 +53,22 @@ export default function Home() {
       window.removeEventListener("scroll", onScroll);
     };
   }, []);
+
+  useEffect(() => {
+    if (activeMemeIndex === null) return;
+
+    const previousOverflow = document.body.style.overflow;
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setActiveMemeIndex(null);
+    };
+
+    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", onKeyDown);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener("keydown", onKeyDown);
+    };
+  }, [activeMemeIndex]);
 
   useEffect(() => {
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -375,7 +401,13 @@ export default function Home() {
         <div className="about-details scroll-reveal">
           <p>I&apos;m friendly, generally happy, and curious about more than software. I like fixing things, understanding why they work, and enjoying the process without turning everything into a productivity project.</p>
           <div className="interest-grid">
-            <article className="scroll-reveal"><span>Move</span><strong>Strength training</strong><small>A good workout is the best reset.</small></article>
+            <article className="meme-interest scroll-reveal">
+              <button type="button" onClick={() => setActiveMemeIndex(0)} aria-haspopup="dialog">
+                <span>Create</span>
+                <strong>Memes</strong>
+                <small>I enjoy making tech and pop-culture memes. Open the archive ↗</small>
+              </button>
+            </article>
             <article className="scroll-reveal"><span>Sport</span><strong>Cricket & Formula 1</strong><small>I enjoy playing cricket and following F1.</small></article>
             <article className="scroll-reveal"><span>Think</span><strong>Maths & problem solving</strong><small>LeetCode, logical puzzles, and questions that take a few attempts.</small></article>
             <article className="scroll-reveal"><span>Follow</span><strong>Economics & current affairs</strong><small>I enjoy understanding the story behind the headline.</small></article>
@@ -441,6 +473,42 @@ export default function Home() {
         <p>{visitorCount ? `${visitorCount} visits so far · ` : ""}© 2026 Devarsh Vasa</p>
         <a href="#top">Back to top ↑</a>
       </footer>
+
+      {activeMemeIndex !== null && (
+        <div
+          className="meme-lightbox"
+          onMouseDown={(event) => {
+            if (event.target === event.currentTarget) setActiveMemeIndex(null);
+          }}
+        >
+          <section className="meme-dialog" role="dialog" aria-modal="true" aria-labelledby="meme-dialog-title">
+            <header>
+              <div>
+                <span>Meme archive · {String(activeMemeIndex + 1).padStart(2, "0")} / {String(memes.length).padStart(2, "0")}</span>
+                <h2 id="meme-dialog-title">{memes[activeMemeIndex].title}</h2>
+              </div>
+              <button className="meme-close" type="button" onClick={() => setActiveMemeIndex(null)} autoFocus aria-label="Close meme gallery">Close ×</button>
+            </header>
+            <figure>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={`${basePath}${memes[activeMemeIndex].src}`}
+                alt={memes[activeMemeIndex].alt}
+                width="1151"
+                height="1367"
+                decoding="async"
+              />
+              <figcaption>{memes[activeMemeIndex].description}</figcaption>
+            </figure>
+            {memes.length > 1 && (
+              <nav aria-label="Meme gallery navigation">
+                <button type="button" onClick={() => setActiveMemeIndex((activeMemeIndex - 1 + memes.length) % memes.length)}>← Previous</button>
+                <button type="button" onClick={() => setActiveMemeIndex((activeMemeIndex + 1) % memes.length)}>Next →</button>
+              </nav>
+            )}
+          </section>
+        </div>
+      )}
     </main>
   );
 }
