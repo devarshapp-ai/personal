@@ -237,7 +237,7 @@ export default function Home() {
         <div className="hero-grid">
           <div className="hero-copy">
             <p className="eyebrow">Application Engineer · Oracle India</p>
-            <p className="hero-hello">Hi, I&apos;m Devarsh.</p>
+            <p className="hero-hello">Hi, I&apos;m Devarsh Vasa.</p>
             <h1>
               I write Java,
               <br />
@@ -392,7 +392,7 @@ export default function Home() {
             <p><span>devarsh@portfolio</span>:~$ unlock --premium</p>
             {!premiumUnlocked ? (
               <>
-                <h2>Unlock the premium version of Devarsh.</h2>
+                <h2>Unlock the premium version of Devarsh Vasa.</h2>
                 <p className="terminal-muted">One tiny requirement: hire him.</p>
                 <button type="button" onClick={() => setPremiumUnlocked(true)}>Attempt unlock ↵</button>
               </>

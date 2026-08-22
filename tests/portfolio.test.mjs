@@ -13,6 +13,7 @@ async function source(path) {
 test("statically exports Devarsh's portfolio", async () => {
   const html = await render();
   assert.match(html, /<title>Devarsh Vasa — Java Backend Engineer<\/title>/i);
+  assert.match(html, /Hi, I(?:&#x27;|&apos;|'|’)m Devarsh Vasa\./i);
   assert.match(html, /I write Java/);
   assert.match(html, /stay curious/);
   assert.match(html, /Application Engineer/);
@@ -20,7 +21,7 @@ test("statically exports Devarsh's portfolio", async () => {
   assert.match(html, /Oracle Fusion SCM Procurement/);
   assert.match(html, /MEDplat/);
   assert.match(html, /medplat-logo\.png/);
-  assert.match(html, /Unlock the premium version of Devarsh/);
+  assert.match(html, /Unlock the premium version of Devarsh Vasa/);
   assert.match(html, /devarsh\.jobs@gmail\.com/);
   assert.match(html, /Spring Boot/);
   assert.match(html, /Strength training/);
