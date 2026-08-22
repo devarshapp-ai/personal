@@ -422,9 +422,11 @@ a { color: inherit; text-decoration: none; }
 }
 .meme-dialog {
   width: min(920px, 100%);
-  max-height: calc(100svh - 32px);
+  height: min(860px, calc(100svh - 32px));
   padding: clamp(18px, 3vw, 34px);
-  overflow: auto;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  overflow: hidden;
   border: 1px solid rgba(229,111,61,.42);
   border-radius: 18px 18px 68px 18px;
   background: #171612;
@@ -441,9 +443,9 @@ a { color: inherit; text-decoration: none; }
 .meme-close:focus-visible,
 .meme-dialog nav button:hover,
 .meme-dialog nav button:focus-visible { border-color: var(--accent); color: var(--accent); outline: none; }
-.meme-dialog figure { margin: 0; display: grid; grid-template-columns: minmax(0, 1fr) minmax(170px, .42fr); gap: clamp(18px, 4vw, 42px); align-items: end; }
-.meme-dialog figure img { display: block; width: 100%; max-height: 64svh; object-fit: contain; border-radius: 10px 10px 42px 10px; background: #0f0f0d; }
-.meme-dialog figcaption { padding-bottom: 8px; color: #b5ada1; font-size: clamp(15px, 1.8vw, 19px); line-height: 1.55; }
+.meme-dialog figure { min-height: 0; margin: 0; display: grid; grid-template-columns: minmax(0, 1fr) minmax(170px, .42fr); gap: clamp(18px, 4vw, 42px); align-items: stretch; }
+.meme-dialog figure img { display: block; width: 100%; height: 100%; min-height: 0; object-fit: contain; border-radius: 10px 10px 42px 10px; background: #0f0f0d; }
+.meme-dialog figcaption { align-self: end; padding-bottom: 8px; color: #b5ada1; font-size: clamp(15px, 1.8vw, 19px); line-height: 1.55; }
 .meme-dialog nav { display: flex; justify-content: space-between; gap: 12px; margin-top: 20px; }
 .meme-dialog nav button { padding: 10px 12px; }
 
@@ -504,7 +506,7 @@ a { color: inherit; text-decoration: none; }
   .role ul { grid-template-columns: 1fr; }
   .interest-grid { grid-template-columns: 1fr; }
   .meme-dialog figure { grid-template-columns: 1fr; }
-  .meme-dialog figure img { max-height: 62svh; }
+  .meme-dialog figure { grid-template-rows: minmax(0, 1fr) auto; }
   .meme-dialog figcaption { padding-bottom: 0; }
   .contact-form { grid-template-columns: 1fr; }
   .form-field, .message-field, .contact-form button { grid-column: 1; }

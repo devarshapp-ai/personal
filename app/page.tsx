@@ -38,6 +38,25 @@ const memes = [
   },
 ] as const;
 
+const sourceEasterEgg = `
+
+╔══════════════════════════════════════════════════════════════╗
+║                    WELL, HELLO THERE.                        ║
+╠══════════════════════════════════════════════════════════════╣
+║ You opened DevTools. Bold move.                              ║
+║                                                              ║
+║ Looking for secrets? Plot twist: they are not committed.     ║
+║ Found a bug? Congratulations, you are now part of QA.        ║
+║ Found clean code? Please tell my future self.                ║
+║                                                              ║
+║ Recruiter? This absolutely counts as attention to detail.    ║
+║ Copying the site? At least improve the commit message.       ║
+║                                                              ║
+║                                      Regards,                ║
+║                                      Devarsh Vasa            ║
+╚══════════════════════════════════════════════════════════════╝
+`;
+
 export default function Home() {
   const heroArtRef = useRef<HTMLDivElement>(null);
   const cursorDotRef = useRef<HTMLDivElement>(null);
@@ -48,6 +67,12 @@ export default function Home() {
   const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
   const formspreeId = process.env.NEXT_PUBLIC_FORMSPREE_ID;
   const goatCounterCode = process.env.NEXT_PUBLIC_GOATCOUNTER_CODE;
+
+  useEffect(() => {
+    const comment = document.createComment(sourceEasterEgg);
+    document.body.prepend(comment);
+    return () => comment.remove();
+  }, []);
 
   useEffect(() => {
     const heroArt = heroArtRef.current;

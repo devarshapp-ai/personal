@@ -49,6 +49,31 @@ test("renders privacy-safe social metadata", async () => {
   assert.match(html, /"@type":"Person"/i);
 });
 
+test("publishes a compliant favicon", async () => {
+  const [html, favicon] = await Promise.all([
+    render(),
+    readFile(new URL("../public/favicon.png", import.meta.url)),
+  ]);
+
+  assert.match(
+    html,
+    /rel="icon"[^>]+(?:https:\/\/devarsh\.online|http:\/\/localhost:3000)\/favicon\.png/i,
+  );
+  assert.equal(favicon.subarray(1, 4).toString(), "PNG");
+  assert.equal(favicon.readUInt32BE(16), 128);
+  assert.equal(favicon.readUInt32BE(20), 128);
+});
+
+test("adds a harmless easter egg as a top-level DOM comment", async () => {
+  const page = await source("app/page.tsx");
+
+  assert.match(page, /WELL, HELLO THERE/);
+  assert.match(page, /Looking for secrets\? Plot twist: they are not committed\./);
+  assert.match(page, /document\.createComment\(sourceEasterEgg\)/);
+  assert.match(page, /document\.body\.prepend\(comment\)/);
+  assert.doesNotMatch(page, /dangerouslySetInnerHTML=\{\{ __html: sourceEasterEgg \}\}/);
+});
+
 test("uses restrained hero and scroll motion with reduced-motion support", async () => {
   const [page, styles] = await Promise.all([
     source("app/page.tsx"),
@@ -142,6 +167,9 @@ test("provides an accessible, future-ready meme archive", async () => {
   assert.match(page, /Meme archive/);
   assert.match(styles, /\.meme-lightbox/);
   assert.match(styles, /\.meme-dialog/);
+  assert.match(styles, /\.meme-dialog\s*\{[^}]*height:\s*min\(860px, calc\(100svh - 32px\)\)/s);
+  assert.match(styles, /grid-template-rows:\s*auto minmax\(0, 1fr\) auto/);
+  assert.match(styles, /\.meme-dialog figure img\s*\{[^}]*height:\s*100%/s);
 });
 
 test("does not load mutable third-party analytics JavaScript", async () => {
