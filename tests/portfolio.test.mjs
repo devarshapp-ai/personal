@@ -150,5 +150,9 @@ test("does not load mutable third-party analytics JavaScript", async () => {
   assert.match(page, /goatcounter\.com/);
   assert.match(page, /\/counter\/.*\.json/);
   assert.match(page, /encodeURIComponent\(counterPath\)/);
+  assert.match(page, /\.json\?start=2026-08-22/);
+  assert.match(page, /cache:\s*"no-store"/);
+  assert.match(page, /pixel\.onload = fetchVisitorCount/);
+  assert.match(page, /pixel\.onerror = fetchVisitorCount/);
   assert.doesNotMatch(page, /encodeURIComponent\("TOTAL"\)/);
 });

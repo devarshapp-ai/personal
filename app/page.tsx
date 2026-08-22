@@ -167,23 +167,43 @@ export default function Home() {
     if (!goatCounterCode || !/^[a-z0-9-]+$/.test(goatCounterCode)) return;
 
     const origin = `https://${goatCounterCode}.goatcounter.com`;
-    const pixel = new window.Image();
-    pixel.referrerPolicy = "no-referrer";
-    pixel.src = `${origin}/count?p=${encodeURIComponent(window.location.pathname)}&t=${encodeURIComponent(document.title)}&rnd=${Date.now()}`;
-
     const controller = new AbortController();
     const counterPath = window.location.pathname || "/";
-    fetch(`${origin}/counter/${encodeURIComponent(counterPath)}.json`, {
-      signal: controller.signal,
-      referrerPolicy: "no-referrer",
-    })
-      .then((response) => (response.ok ? response.json() : null))
-      .then((data: { count?: string } | null) => {
-        if (data?.count) setVisitorCount(data.count);
-      })
-      .catch(() => undefined);
+    let hasFetchedCount = false;
 
-    return () => controller.abort();
+    const fetchVisitorCount = () => {
+      if (hasFetchedCount) return;
+      hasFetchedCount = true;
+
+      fetch(
+        `${origin}/counter/${encodeURIComponent(counterPath)}.json?start=2026-08-22`,
+        {
+          signal: controller.signal,
+          referrerPolicy: "no-referrer",
+          cache: "no-store",
+        },
+      )
+        .then((response) => (response.ok ? response.json() : null))
+        .then((data: { count?: string } | null) => {
+          if (typeof data?.count === "string") setVisitorCount(data.count);
+        })
+        .catch(() => undefined);
+    };
+
+    const pixel = new window.Image();
+    pixel.referrerPolicy = "no-referrer";
+    pixel.onload = fetchVisitorCount;
+    pixel.onerror = fetchVisitorCount;
+    pixel.src = `${origin}/count?p=${encodeURIComponent(window.location.pathname)}&t=${encodeURIComponent(document.title)}&rnd=${Date.now()}`;
+
+    const fallbackTimer = window.setTimeout(fetchVisitorCount, 1500);
+
+    return () => {
+      window.clearTimeout(fallbackTimer);
+      pixel.onload = null;
+      pixel.onerror = null;
+      controller.abort();
+    };
   }, [goatCounterCode]);
 
   useEffect(() => {
@@ -509,6 +529,7 @@ export default function Home() {
       {activeMemeIndex !== null && (
         <div
           className="meme-lightbox"
+          role="presentation"
           onMouseDown={(event) => {
             if (event.target === event.currentTarget) setActiveMemeIndex(null);
           }}
@@ -519,7 +540,7 @@ export default function Home() {
                 <span>Meme archive · {String(activeMemeIndex + 1).padStart(2, "0")} / {String(memes.length).padStart(2, "0")}</span>
                 <h2 id="meme-dialog-title">{memes[activeMemeIndex].title}</h2>
               </div>
-              <button className="meme-close" type="button" onClick={() => setActiveMemeIndex(null)} autoFocus aria-label="Close meme gallery">Close ×</button>
+              <button className="meme-close" type="button" onClick={() => setActiveMemeIndex(null)} aria-label="Close meme gallery">Close ×</button>
             </header>
             <figure>
               {/* eslint-disable-next-line @next/next/no-img-element */}
