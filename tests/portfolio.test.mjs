@@ -17,6 +17,9 @@ test("statically exports Devarsh's portfolio", async () => {
   assert.match(html, /stay curious/);
   assert.match(html, /Application Engineer/);
   assert.match(html, /Oracle India/);
+  assert.match(html, /Oracle Fusion SCM Procurement/);
+  assert.match(html, /MEDplat/);
+  assert.match(html, /medplat-logo\.png/);
   assert.match(html, /Unlock the premium version of Devarsh/);
   assert.match(html, /devarsh\.jobs@gmail\.com/);
   assert.match(html, /Spring Boot/);
@@ -86,7 +89,7 @@ test("integrates the portrait cleanly and hides only the visual scrollbar", asyn
 
   assert.match(styles, /scrollbar-width:\s*none/);
   assert.match(styles, /body::-webkit-scrollbar/);
-  assert.match(styles, /\.hero-portrait\s*\{[^}]*radial-gradient/s);
+  assert.match(styles, /\.hero-portrait\s*\{[^}]*aspect-ratio:\s*1[^}]*border-radius:\s*50%/s);
   assert.match(styles, /\.trace-card\s*\{[^}]*right:\s*1%/s);
 });
 
@@ -103,9 +106,19 @@ test("animates impact percentages as their cards enter the viewport", async () =
   assert.match(styles, /article\.is-visible \.impact-meter i/);
 });
 
+test("keeps the beyond-work cards aligned and omits the old education note", async () => {
+  const [html, styles] = await Promise.all([render(), source("app/globals.css")]);
+
+  assert.doesNotMatch(html, /BE in Computer Engineering|LDRP ITR/);
+  assert.match(styles, /\.interest-grid article\s*\{[^}]*grid-template-rows:/s);
+  assert.match(styles, /\.interest-grid small\s*\{[^}]*min-height:/s);
+});
+
 test("does not load mutable third-party analytics JavaScript", async () => {
   const page = await source("app/page.tsx");
   assert.doesNotMatch(page, /gc\.zgo\.at\/count\.js/);
   assert.match(page, /goatcounter\.com/);
   assert.match(page, /\/counter\/.*\.json/);
+  assert.match(page, /encodeURIComponent\(counterPath\)/);
+  assert.doesNotMatch(page, /encodeURIComponent\("TOTAL"\)/);
 });

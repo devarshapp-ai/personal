@@ -15,7 +15,7 @@ Highlights include:
 - custom desktop cursor with touch-friendly fallbacks
 - professional experience timeline and impact metrics
 - honest, confidence-labelled technical skills
-- personal interests and education
+- personal interests beyond work
 - interactive “premium unlock” joke
 - email and LinkedIn contact options
 - social-sharing artwork and metadata
@@ -61,6 +61,16 @@ Copy `.env.example` to `.env.local` when enabling optional integrations:
 - `NEXT_PUBLIC_FORMSPREE_ID` sends contact-form submissions through Formspree. Without it, the form opens an email draft.
 - `NEXT_PUBLIC_GOATCOUNTER_CODE` enables a privacy-friendly visitor total through GoatCounter's image and JSON endpoints; no third-party JavaScript is loaded.
 - `NEXT_PUBLIC_SITE_URL` overrides the public URL when using a custom domain.
+
+### Enable the live visit counter
+
+1. Create a GoatCounter site for `devarsh.online` and note its short site code.
+2. In GoatCounter, enable **Allow adding visitor counts on your website**.
+3. In GitHub, open **Settings → Secrets and variables → Actions → Variables**.
+4. Add `GOATCOUNTER_CODE` with the short site code as its value.
+5. Re-run the Pages workflow or push a new commit.
+
+The public footer shows the homepage visit total. The private GoatCounter dashboard remains the place to review referrers, pages, browsers, and approximate unique-visitor trends.
 
 ## Contact
 

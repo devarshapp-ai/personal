@@ -120,7 +120,8 @@ export default function Home() {
     pixel.src = `${origin}/count?p=${encodeURIComponent(window.location.pathname)}&t=${encodeURIComponent(document.title)}&rnd=${Date.now()}`;
 
     const controller = new AbortController();
-    fetch(`${origin}/counter/${encodeURIComponent("TOTAL")}.json`, {
+    const counterPath = window.location.pathname || "/";
+    fetch(`${origin}/counter/${encodeURIComponent(counterPath)}.json`, {
       signal: controller.signal,
       referrerPolicy: "no-referrer",
     })
@@ -308,7 +309,7 @@ export default function Home() {
             <div className="role-copy">
               <p className="company-line"><span className="company-mark oracle-mark">Oracle</span><span>Oracle India · Gandhinagar</span></p>
               <h3>Application Engineer</h3>
-              <p className="role-summary">Working on Oracle Fusion SCM Purchasing—improving enterprise workflows, resolving high-severity customer issues, and partnering with global functional teams on robust fixes.</p>
+              <p className="role-summary">Working in Oracle Fusion SCM Procurement, with a focus on Purchasing—improving enterprise workflows, resolving high-severity customer issues, and partnering with global functional teams on robust fixes.</p>
               <ul>
                 <li>Enhancement, defect resolution, and performance improvement</li>
                 <li>Root-cause analysis across distributed procurement systems</li>
@@ -332,9 +333,15 @@ export default function Home() {
           <article className="role scroll-reveal">
             <div className="role-meta"><span>2022 — 2023</span></div>
             <div className="role-copy">
-              <p className="company-line"><span className="company-mark argusoft-mark">argusoft</span><span>Argusoft · Gandhinagar</span></p>
+              <p className="company-line">
+                <a className="company-logo-link" href="https://www.medplat.co.in/" target="_blank" rel="noreferrer" aria-label="Visit the MEDplat website">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img className="company-logo medplat-logo" src={`${basePath}/medplat-logo.png`} alt="Argusoft MEDplat" width="685" height="206" loading="lazy" />
+                </a>
+                <span>Argusoft · MEDplat · Gandhinagar</span>
+              </p>
               <h3>Programmer Analyst</h3>
-              <p className="role-summary">Built secure digital-health integrations and optimized retrieval queries by 75% on datasets larger than 3 TB.</p>
+              <p className="role-summary">Worked on MEDplat, an interoperable digital-health platform for community healthcare, building secure integrations and improving retrieval performance by 75% on datasets larger than 3 TB.</p>
               <ul>
                 <li>RBAC, ABAC, JWT authorization, and REST integrations</li>
                 <li>25% faster loading and a 40% smaller project footprint</li>
@@ -375,7 +382,6 @@ export default function Home() {
             <article className="scroll-reveal"><span>Watch</span><strong>Movies & the MCU</strong><small>Iron Man remains the favourite—build, break, improve.</small></article>
             <article className="scroll-reveal"><span>Culture</span><strong>Garba</strong><small>Good music, a lively circle, and Garba season.</small></article>
           </div>
-          <p className="education-note">BE in Computer Engineering · LDRP ITR · Ahmedabad</p>
         </div>
       </section>
 
@@ -432,7 +438,7 @@ export default function Home() {
 
       <footer className="site-footer">
         <a className="brand" href="#top">DV<span>.</span></a>
-        <p>{visitorCount ? `${visitorCount} visitors so far · ` : ""}© 2026 Devarsh Vasa</p>
+        <p>{visitorCount ? `${visitorCount} visits so far · ` : ""}© 2026 Devarsh Vasa</p>
         <a href="#top">Back to top ↑</a>
       </footer>
     </main>
