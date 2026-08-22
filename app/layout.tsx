@@ -69,10 +69,7 @@ export default function RootLayout({
                 name: "LDRP Institute of Technology and Research",
               },
               knowsAbout: ["Java", "Spring Boot", "REST APIs", "SQL", "Redis", "Docker", "System Design"],
-              sameAs: [
-                "https://www.linkedin.com/in/devarsh-vasa/",
-                "https://github.com/devarshapp-ai",
-              ],
+              sameAs: ["https://www.linkedin.com/in/devarsh-vasa/"],
             }),
           }}
         />

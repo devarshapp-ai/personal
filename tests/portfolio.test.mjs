@@ -47,6 +47,8 @@ test("renders privacy-safe social metadata", async () => {
   assert.doesNotMatch(html, /href=["']tel:|telephone|phone/i);
   assert.match(html, /application\/ld\+json/i);
   assert.match(html, /"@type":"Person"/i);
+  assert.doesNotMatch(html, /href="https:\/\/github\.com\/devarshapp-ai"/i);
+  assert.doesNotMatch(html, /"https:\/\/github\.com\/devarshapp-ai"/i);
 });
 
 test("publishes a compliant favicon", async () => {
