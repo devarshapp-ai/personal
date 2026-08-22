@@ -59,7 +59,7 @@ In the repository settings, choose **Settings → Pages → GitHub Actions** as 
 Copy `.env.example` to `.env.local` when enabling optional integrations:
 
 - `NEXT_PUBLIC_FORMSPREE_ID` sends contact-form submissions through Formspree. Without it, the form opens an email draft.
-- `NEXT_PUBLIC_GOATCOUNTER_CODE` enables privacy-friendly analytics and the visible visitor count.
+- `NEXT_PUBLIC_GOATCOUNTER_CODE` enables a privacy-friendly visitor total through GoatCounter's image and JSON endpoints; no third-party JavaScript is loaded.
 - `NEXT_PUBLIC_SITE_URL` overrides the public URL when using a custom domain.
 
 ## Contact

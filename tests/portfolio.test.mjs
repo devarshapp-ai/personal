@@ -6,6 +6,10 @@ async function render() {
   return readFile(new URL("../dist/client/index.html", import.meta.url), "utf8");
 }
 
+async function source(path) {
+  return readFile(new URL(`../${path}`, import.meta.url), "utf8");
+}
+
 test("statically exports Devarsh's portfolio", async () => {
   const html = await render();
   assert.match(html, /<title>Devarsh Vasa — Java Backend Engineer<\/title>/i);
@@ -31,8 +35,55 @@ test("renders privacy-safe social metadata", async () => {
     /property="og:image" content="(?:https:\/\/devarsh\.online|http:\/\/localhost:3000)\/og\.png"/,
   );
   assert.match(html, /name="twitter:card" content="summary_large_image"/);
-  assert.match(html, /rel="icon"[^>]+devarsh-portrait\.png/i);
-  assert.match(html, /src="\/devarsh-portrait\.png"/i);
-  assert.doesNotMatch(html, /\/personal\/(?:og|devarsh-portrait)\.png/i);
+  assert.match(html, /rel="icon"[^>]+favicon\.png/i);
+  assert.match(html, /rel="apple-touch-icon"[^>]+favicon\.png/i);
+  assert.match(html, /class="hero-portrait"[^>]+devarsh-blue\.webp/i);
+  assert.doesNotMatch(html, /portrait-placeholder|devarsh-profile\.webp|devarsh-editorial\.png|devarsh-kumar\.png|devarsh-front\.png/i);
   assert.doesNotMatch(html, /href=["']tel:|telephone|phone/i);
+  assert.match(html, /application\/ld\+json/i);
+  assert.match(html, /"@type":"Person"/i);
+});
+
+test("uses restrained hero and scroll motion with reduced-motion support", async () => {
+  const [page, styles] = await Promise.all([
+    source("app/page.tsx"),
+    source("app/globals.css"),
+  ]);
+
+  assert.doesNotMatch(page, /hero-marquee/);
+  assert.match(page, /IntersectionObserver/);
+  assert.match(page, /scroll-reveal/);
+  assert.match(styles, /\.scroll-motion-ready \.scroll-reveal/);
+  assert.match(styles, /@media \(prefers-reduced-motion: reduce\)/);
+  assert.match(styles, /\.hero-art\s*\{[^}]*perspective:/s);
+});
+
+test("publishes crawler discovery files for the custom domain", async () => {
+  const [robots, sitemap] = await Promise.all([
+    source("public/robots.txt"),
+    source("public/sitemap.xml"),
+  ]);
+  assert.match(robots, /Sitemap: https:\/\/devarsh\.online\/sitemap\.xml/);
+  assert.match(sitemap, /<loc>https:\/\/devarsh\.online\/<\/loc>/);
+});
+
+test("keeps the custom cursor stable and visible on the accent panel", async () => {
+  const [page, styles] = await Promise.all([
+    source("app/page.tsx"),
+    source("app/globals.css"),
+  ]);
+
+  assert.match(page, /requestAnimationFrame\(renderCursor\)/);
+  assert.match(page, /ring\.style\.transform = position/);
+  assert.match(page, /closest\("\.contact-panel"\)/);
+  assert.match(page, /classList\.toggle\("is-on-accent"/);
+  assert.match(styles, /\.cursor-dot\.is-on-accent\s*\{[^}]*background:\s*var\(--ink\)/s);
+  assert.match(styles, /\.cursor-ring\.is-on-accent\s*\{[^}]*border-color:/s);
+});
+
+test("does not load mutable third-party analytics JavaScript", async () => {
+  const page = await source("app/page.tsx");
+  assert.doesNotMatch(page, /gc\.zgo\.at\/count\.js/);
+  assert.match(page, /goatcounter\.com/);
+  assert.match(page, /\/counter\/.*\.json/);
 });
