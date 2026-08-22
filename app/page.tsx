@@ -192,12 +192,11 @@ export default function Home() {
     const finePointer = window.matchMedia("(pointer: fine)");
     if (!dot || !ring || !finePointer.matches) return;
 
-    document.documentElement.classList.add("custom-cursor-active");
-
     let animationFrame = 0;
     let nextEvent: PointerEvent | null = null;
 
     const renderCursor = () => {
+      animationFrame = 0;
       const event = nextEvent;
       if (!event) return;
 
@@ -215,7 +214,7 @@ export default function Home() {
       );
       dot.classList.add("is-visible");
       ring.classList.add("is-visible");
-      animationFrame = 0;
+      document.documentElement.classList.add("custom-cursor-active");
     };
 
     const onPointerMove = (event: PointerEvent) => {
@@ -227,7 +226,10 @@ export default function Home() {
     const onPointerDown = () => ring.classList.add("is-pressed");
     const onPointerUp = () => ring.classList.remove("is-pressed");
     const onPointerLeave = () => {
+      window.cancelAnimationFrame(animationFrame);
+      animationFrame = 0;
       nextEvent = null;
+      document.documentElement.classList.remove("custom-cursor-active");
       dot.classList.remove("is-visible");
       ring.classList.remove("is-visible");
       dot.classList.remove("is-on-accent");
@@ -235,16 +237,20 @@ export default function Home() {
     };
 
     window.addEventListener("pointermove", onPointerMove, { passive: true });
+    window.addEventListener("pointerenter", onPointerMove, { passive: true });
     document.addEventListener("pointerdown", onPointerDown, { passive: true });
     document.addEventListener("pointerup", onPointerUp, { passive: true });
     document.addEventListener("mouseleave", onPointerLeave);
+    window.addEventListener("blur", onPointerLeave);
     return () => {
       document.documentElement.classList.remove("custom-cursor-active");
       window.cancelAnimationFrame(animationFrame);
       window.removeEventListener("pointermove", onPointerMove);
+      window.removeEventListener("pointerenter", onPointerMove);
       document.removeEventListener("pointerdown", onPointerDown);
       document.removeEventListener("pointerup", onPointerUp);
       document.removeEventListener("mouseleave", onPointerLeave);
+      window.removeEventListener("blur", onPointerLeave);
     };
   }, []);
 
