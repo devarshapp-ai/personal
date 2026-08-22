@@ -2,7 +2,7 @@
 
 A fully static personal website for Devarsh Vasa, a Java developer and Application Engineer at Oracle India.
 
-[View the live website](https://devarshapp-ai.github.io/personal/)
+[View the live website](https://devarsh.online/)
 
 ## About the website
 
@@ -52,7 +52,7 @@ npm test
 
 The workflow in `.github/workflows/deploy-pages.yml` builds and publishes the static website whenever `main` is updated.
 
-In the repository settings, choose **Settings → Pages → GitHub Actions** as the publishing source. The workflow automatically handles the `/personal` repository path.
+In the repository settings, choose **Settings → Pages → GitHub Actions** as the publishing source and use `devarsh.online` as the custom domain. The workflow builds every asset for the custom-domain root.
 
 ## Optional services
 

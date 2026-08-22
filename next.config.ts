@@ -3,15 +3,19 @@ import type { NextConfig } from "next";
 const repositoryName = process.env.GITHUB_REPOSITORY?.split("/").at(-1) ?? "";
 const repositoryOwner = process.env.GITHUB_REPOSITORY_OWNER ?? "";
 const isGitHubPagesBuild = process.env.GITHUB_ACTIONS === "true";
+const configuredSiteUrl = process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/+$/, "");
 const isUserSiteRepository =
   repositoryName.toLowerCase() ===
   `${repositoryOwner.toLowerCase()}.github.io`;
 const basePath =
-  isGitHubPagesBuild && repositoryName && !isUserSiteRepository
+  isGitHubPagesBuild &&
+  !configuredSiteUrl &&
+  repositoryName &&
+  !isUserSiteRepository
     ? `/${repositoryName}`
     : "";
 const siteUrl =
-  process.env.NEXT_PUBLIC_SITE_URL ??
+  configuredSiteUrl ??
   (isGitHubPagesBuild && repositoryOwner
     ? `https://${repositoryOwner}.github.io${basePath}`
     : "http://localhost:3000");

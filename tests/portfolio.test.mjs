@@ -26,7 +26,13 @@ test("renders privacy-safe social metadata", async () => {
   const html = await render();
 
   assert.match(html, /property="og:title" content="Devarsh Vasa — Java Backend Engineer"/);
-  assert.match(html, /property="og:image" content="http:\/\/localhost:3000\/og\.png"/);
+  assert.match(
+    html,
+    /property="og:image" content="(?:https:\/\/devarsh\.online|http:\/\/localhost:3000)\/og\.png"/,
+  );
   assert.match(html, /name="twitter:card" content="summary_large_image"/);
+  assert.match(html, /rel="icon"[^>]+devarsh-portrait\.png/i);
+  assert.match(html, /src="\/devarsh-portrait\.png"/i);
+  assert.doesNotMatch(html, /\/personal\/(?:og|devarsh-portrait)\.png/i);
   assert.doesNotMatch(html, /href=["']tel:|telephone|phone/i);
 });

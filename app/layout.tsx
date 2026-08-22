@@ -4,12 +4,23 @@ import "./globals.css";
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
 const socialImageUrl = new URL(`${basePath}/og.png`, `${siteUrl}/`).toString();
+const portraitUrl = new URL(
+  `${basePath}/devarsh-portrait.png`,
+  `${siteUrl}/`,
+).toString();
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: "Devarsh Vasa — Java Backend Engineer",
   description:
     "Java developer and Application Engineer at Oracle India—solving problems, learning, and staying curious beyond the screen.",
+  alternates: {
+    canonical: siteUrl,
+  },
+  icons: {
+    icon: [{ url: portraitUrl, type: "image/png" }],
+    apple: [{ url: portraitUrl, type: "image/png" }],
+  },
   openGraph: {
     title: "Devarsh Vasa — Java Backend Engineer",
     description: "I write Java, solve problems, and stay curious.",
