@@ -216,12 +216,14 @@ a { color: inherit; text-decoration: none; }
 .hero-portrait {
   position: relative;
   z-index: 1;
-  width: min(80%, 470px);
+  width: min(76%, 430px);
   height: auto;
-  aspect-ratio: 1;
+  aspect-ratio: 4 / 5;
   object-fit: cover;
-  object-position: center 30%;
-  border-radius: 50%;
+  object-position: center 27%;
+  border: 1px solid rgba(229,111,61,.16);
+  border-radius: 18px 18px 96px 96px / 18px 18px 58px 58px;
+  background: radial-gradient(circle at 50% 28%, rgba(229,111,61,.1), rgba(13,13,11,.86) 78%);
   filter: grayscale(.08) sepia(.04) saturate(.9) brightness(.92) contrast(1.07) drop-shadow(18px 24px 28px rgba(0,0,0,.42));
   transform: translate3d(-1%, -8%, 38px) rotate(-1deg);
   transform-origin: 52% 88%;

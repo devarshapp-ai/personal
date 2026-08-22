@@ -89,7 +89,7 @@ test("integrates the portrait cleanly and hides only the visual scrollbar", asyn
 
   assert.match(styles, /scrollbar-width:\s*none/);
   assert.match(styles, /body::-webkit-scrollbar/);
-  assert.match(styles, /\.hero-portrait\s*\{[^}]*aspect-ratio:\s*1[^}]*border-radius:\s*50%/s);
+  assert.match(styles, /\.hero-portrait\s*\{[^}]*aspect-ratio:\s*4\s*\/\s*5[^}]*border-radius:\s*18px 18px 96px 96px/s);
   assert.match(styles, /\.trace-card\s*\{[^}]*right:\s*1%/s);
 });
 
