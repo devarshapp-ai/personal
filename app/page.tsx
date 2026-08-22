@@ -69,6 +69,49 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
+    const numbers = Array.from(document.querySelectorAll<HTMLElement>(".impact-number[data-target]"));
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const animationFrames = new Set<number>();
+
+    if (reduceMotion.matches) {
+      numbers.forEach((number) => {
+        number.textContent = `${number.dataset.target}%`;
+      });
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          const number = entry.target as HTMLElement;
+          const target = Number(number.dataset.target ?? 0);
+          const startedAt = performance.now();
+          const duration = 900;
+
+          const count = (now: number) => {
+            const progress = Math.min((now - startedAt) / duration, 1);
+            const eased = 1 - Math.pow(1 - progress, 3);
+            number.textContent = `${Math.round(target * eased)}%`;
+            if (progress < 1) animationFrames.add(window.requestAnimationFrame(count));
+          };
+
+          number.textContent = "0%";
+          animationFrames.add(window.requestAnimationFrame(count));
+          observer.unobserve(number);
+        });
+      },
+      { threshold: 0.55 },
+    );
+
+    numbers.forEach((number) => observer.observe(number));
+    return () => {
+      observer.disconnect();
+      animationFrames.forEach((frame) => window.cancelAnimationFrame(frame));
+    };
+  }, []);
+
+  useEffect(() => {
     if (!goatCounterCode || !/^[a-z0-9-]+$/.test(goatCounterCode)) return;
 
     const origin = `https://${goatCounterCode}.goatcounter.com`;
@@ -219,10 +262,10 @@ export default function Home() {
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               className="hero-portrait"
-              src={`${basePath}/devarsh-blue.webp`}
+              src={`${basePath}/devarsh-midnight.webp`}
               alt="Devarsh Vasa"
               width="941"
-              height="1325"
+              height="1672"
               decoding="async"
               fetchPriority="high"
             />
@@ -247,9 +290,9 @@ export default function Home() {
           <span>Evidence from experience</span>
         </div>
         <div className="impact-grid">
-          <article className="scroll-reveal"><strong>75%</strong><p>faster query response on datasets over 3 TB</p></article>
-          <article className="scroll-reveal"><strong>30%</strong><p>faster data extraction after an agent upgrade</p></article>
-          <article className="scroll-reveal"><strong>40%</strong><p>reduction in project size through refactoring</p></article>
+          <article className="scroll-reveal"><strong className="impact-number" data-target="75">75%</strong><span className="impact-meter" aria-hidden="true"><i className="meter-75" /></span><p>faster query response on datasets over 3 TB</p></article>
+          <article className="scroll-reveal"><strong className="impact-number" data-target="30">30%</strong><span className="impact-meter" aria-hidden="true"><i className="meter-30" /></span><p>faster data extraction after an agent upgrade</p></article>
+          <article className="scroll-reveal"><strong className="impact-number" data-target="40">40%</strong><span className="impact-meter" aria-hidden="true"><i className="meter-40" /></span><p>reduction in project size through refactoring</p></article>
           <article className="scroll-reveal"><strong>3+</strong><p>years learning and shipping software professionally</p></article>
         </div>
       </section>

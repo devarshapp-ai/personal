@@ -37,8 +37,8 @@ test("renders privacy-safe social metadata", async () => {
   assert.match(html, /name="twitter:card" content="summary_large_image"/);
   assert.match(html, /rel="icon"[^>]+favicon\.png/i);
   assert.match(html, /rel="apple-touch-icon"[^>]+favicon\.png/i);
-  assert.match(html, /class="hero-portrait"[^>]+devarsh-blue\.webp/i);
-  assert.doesNotMatch(html, /portrait-placeholder|devarsh-profile\.webp|devarsh-editorial\.png|devarsh-kumar\.png|devarsh-front\.png/i);
+  assert.match(html, /class="hero-portrait"[^>]+devarsh-midnight\.webp/i);
+  assert.doesNotMatch(html, /portrait-placeholder|devarsh-blue\.webp|devarsh-profile\.webp|devarsh-editorial\.png|devarsh-kumar\.png|devarsh-front\.png/i);
   assert.doesNotMatch(html, /href=["']tel:|telephone|phone/i);
   assert.match(html, /application\/ld\+json/i);
   assert.match(html, /"@type":"Person"/i);
@@ -79,6 +79,28 @@ test("keeps the custom cursor stable and visible on the accent panel", async () 
   assert.match(page, /classList\.toggle\("is-on-accent"/);
   assert.match(styles, /\.cursor-dot\.is-on-accent\s*\{[^}]*background:\s*var\(--ink\)/s);
   assert.match(styles, /\.cursor-ring\.is-on-accent\s*\{[^}]*border-color:/s);
+});
+
+test("integrates the portrait cleanly and hides only the visual scrollbar", async () => {
+  const styles = await source("app/globals.css");
+
+  assert.match(styles, /scrollbar-width:\s*none/);
+  assert.match(styles, /body::-webkit-scrollbar/);
+  assert.match(styles, /\.hero-portrait\s*\{[^}]*radial-gradient/s);
+  assert.match(styles, /\.trace-card\s*\{[^}]*right:\s*1%/s);
+});
+
+test("animates impact percentages as their cards enter the viewport", async () => {
+  const [page, styles] = await Promise.all([
+    source("app/page.tsx"),
+    source("app/globals.css"),
+  ]);
+
+  assert.match(page, /impact-number/);
+  assert.match(page, /data-target="75"/);
+  assert.match(page, /requestAnimationFrame\(count\)/);
+  assert.match(styles, /\.impact-meter i/);
+  assert.match(styles, /article\.is-visible \.impact-meter i/);
 });
 
 test("does not load mutable third-party analytics JavaScript", async () => {
