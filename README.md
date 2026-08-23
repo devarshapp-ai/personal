@@ -70,7 +70,7 @@ Copy `.env.example` to `.env.local` when enabling optional integrations:
 4. Add `GOATCOUNTER_CODE` with the short site code as its value.
 5. Re-run the Pages workflow or push a new commit.
 
-The public footer shows the homepage visit total. The private GoatCounter dashboard remains the place to review referrers, pages, browsers, and approximate unique-visitor trends.
+The public footer shows the site-wide visit total on desktop and mobile. GoatCounter caches public counter responses for up to four hours, so its private dashboard can show a newer number before the footer catches up. The page checks again periodically while it remains open. The private GoatCounter dashboard remains the place to review referrers, pages, browsers, and approximate unique-visitor trends.
 
 ## Contact
 

@@ -193,15 +193,10 @@ export default function Home() {
 
     const origin = `https://${goatCounterCode}.goatcounter.com`;
     const controller = new AbortController();
-    const counterPath = window.location.pathname || "/";
-    let hasFetchedCount = false;
 
     const fetchVisitorCount = () => {
-      if (hasFetchedCount) return;
-      hasFetchedCount = true;
-
       fetch(
-        `${origin}/counter/${encodeURIComponent(counterPath)}.json?start=2026-08-22`,
+        `${origin}/counter/TOTAL.json?start=2026-08-22`,
         {
           signal: controller.signal,
           referrerPolicy: "no-referrer",
@@ -222,9 +217,11 @@ export default function Home() {
     pixel.src = `${origin}/count?p=${encodeURIComponent(window.location.pathname)}&t=${encodeURIComponent(document.title)}&rnd=${Date.now()}`;
 
     const fallbackTimer = window.setTimeout(fetchVisitorCount, 1500);
+    const refreshTimer = window.setInterval(fetchVisitorCount, 15 * 60 * 1000);
 
     return () => {
       window.clearTimeout(fallbackTimer);
+      window.clearInterval(refreshTimer);
       pixel.onload = null;
       pixel.onerror = null;
       controller.abort();
@@ -544,7 +541,14 @@ export default function Home() {
 
       <footer className="site-footer">
         <a className="brand" href="#top">DV<span>.</span></a>
-        <p>{visitorCount ? `${visitorCount} visits so far · ` : ""}© 2026 Devarsh Vasa</p>
+        <p>
+          <span aria-live="polite">
+            {visitorCount
+              ? `${visitorCount} ${visitorCount === "1" ? "visit" : "visits"} so far`
+              : "Visits updating"}
+          </span>
+          {" · © 2026 Devarsh Vasa"}
+        </p>
         <a href="#top">Back to top ↑</a>
       </footer>
 

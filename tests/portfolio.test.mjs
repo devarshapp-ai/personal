@@ -182,8 +182,8 @@ test("does not load mutable third-party analytics JavaScript", async () => {
   const page = await source("app/page.tsx");
   assert.doesNotMatch(page, /gc\.zgo\.at\/count\.js/);
   assert.match(page, /goatcounter\.com/);
-  assert.match(page, /\/counter\/.*\.json/);
-  assert.match(page, /encodeURIComponent\(counterPath\)/);
+  assert.match(page, /\/counter\/TOTAL\.json/);
+  assert.match(page, /setInterval\(fetchVisitorCount/);
   assert.match(page, /\.json\?start=2026-08-22/);
   assert.match(page, /cache:\s*"no-store"/);
   assert.match(page, /pixel\.onload = fetchVisitorCount/);
