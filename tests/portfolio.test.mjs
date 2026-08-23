@@ -110,13 +110,18 @@ test("keeps the custom cursor stable and visible on the accent panel", async () 
   ]);
 
   assert.match(page, /requestAnimationFrame\(renderCursor\)/);
-  assert.match(page, /const renderCursor = \(\) => \{\s*animationFrame = 0;\s*const event = nextEvent;/s);
+  assert.match(page, /const hideCursor = \(\) => \{/);
+  assert.match(page, /const renderCursor = \(\) => \{\s*animationFrame = 0;\s*if \(!pointerIsInside\) return;/s);
   assert.match(page, /ring\.style\.transform = position/);
   assert.match(page, /closest\("\.contact-panel"\)/);
   assert.match(page, /classList\.toggle\("is-on-accent"/);
-  assert.match(page, /window\.cancelAnimationFrame\(animationFrame\);\s*animationFrame = 0;\s*nextEvent = null;/s);
+  assert.match(page, /window\.cancelAnimationFrame\(animationFrame\);\s*animationFrame = 0;/s);
   assert.match(page, /classList\.remove\("custom-cursor-active"\)/);
-  assert.match(page, /addEventListener\("pointerenter", onPointerMove/);
+  assert.match(page, /addEventListener\("pointerover", onPointerMove/);
+  assert.match(page, /addEventListener\("pointerout", onPointerOut/);
+  assert.match(page, /event\.relatedTarget === null && leftViewport/);
+  assert.match(page, /addEventListener\("visibilitychange", onVisibilityChange/);
+  assert.match(page, /event\.target instanceof Element/);
   assert.match(styles, /\.cursor-dot\.is-on-accent\s*\{[^}]*background:\s*var\(--ink\)/s);
   assert.match(styles, /\.cursor-ring\.is-on-accent\s*\{[^}]*border-color:/s);
   assert.doesNotMatch(styles, /\.cursor-ring\.is-hovering\s*\{[^}]*(?:width|height):/s);

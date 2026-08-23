@@ -235,15 +235,26 @@ export default function Home() {
     if (!dot || !ring || !finePointer.matches) return;
 
     let animationFrame = 0;
-    let nextEvent: PointerEvent | null = null;
+    let pointerX = -100;
+    let pointerY = -100;
+    let pointerTarget: Element | null = null;
+    let pointerIsInside = false;
+
+    const hideCursor = () => {
+      pointerIsInside = false;
+      window.cancelAnimationFrame(animationFrame);
+      animationFrame = 0;
+      document.documentElement.classList.remove("custom-cursor-active");
+      dot.classList.remove("is-visible", "is-on-accent");
+      ring.classList.remove("is-visible", "is-on-accent", "is-hovering", "is-pressed");
+    };
 
     const renderCursor = () => {
       animationFrame = 0;
-      const event = nextEvent;
-      if (!event) return;
+      if (!pointerIsInside) return;
 
-      const position = `translate3d(${event.clientX}px, ${event.clientY}px, 0) translate(-50%, -50%)`;
-      const target = event.target as Element | null;
+      const position = `translate3d(${pointerX}px, ${pointerY}px, 0) translate(-50%, -50%)`;
+      const target = pointerTarget ?? document.elementFromPoint(pointerX, pointerY);
       const isOnAccent = Boolean(target?.closest(".contact-panel"));
 
       dot.style.transform = position;
@@ -260,39 +271,56 @@ export default function Home() {
     };
 
     const onPointerMove = (event: PointerEvent) => {
-      nextEvent = event;
+      if (event.pointerType === "touch") {
+        hideCursor();
+        return;
+      }
+
+      pointerX = event.clientX;
+      pointerY = event.clientY;
+      pointerTarget = event.target instanceof Element ? event.target : null;
+      pointerIsInside =
+        pointerX >= 0 &&
+        pointerY >= 0 &&
+        pointerX <= window.innerWidth &&
+        pointerY <= window.innerHeight;
+
       if (!animationFrame) {
         animationFrame = window.requestAnimationFrame(renderCursor);
       }
     };
     const onPointerDown = () => ring.classList.add("is-pressed");
     const onPointerUp = () => ring.classList.remove("is-pressed");
-    const onPointerLeave = () => {
-      window.cancelAnimationFrame(animationFrame);
-      animationFrame = 0;
-      nextEvent = null;
-      document.documentElement.classList.remove("custom-cursor-active");
-      dot.classList.remove("is-visible");
-      ring.classList.remove("is-visible");
-      dot.classList.remove("is-on-accent");
-      ring.classList.remove("is-on-accent");
+    const onPointerOut = (event: PointerEvent) => {
+      const leftViewport =
+        event.clientX <= 0 ||
+        event.clientY <= 0 ||
+        event.clientX >= window.innerWidth ||
+        event.clientY >= window.innerHeight;
+      if (event.relatedTarget === null && leftViewport) hideCursor();
+    };
+    const onVisibilityChange = () => {
+      if (document.hidden) hideCursor();
     };
 
     window.addEventListener("pointermove", onPointerMove, { passive: true });
-    window.addEventListener("pointerenter", onPointerMove, { passive: true });
+    document.addEventListener("pointerover", onPointerMove, { passive: true });
+    document.addEventListener("pointerout", onPointerOut, { passive: true });
     document.addEventListener("pointerdown", onPointerDown, { passive: true });
     document.addEventListener("pointerup", onPointerUp, { passive: true });
-    document.addEventListener("mouseleave", onPointerLeave);
-    window.addEventListener("blur", onPointerLeave);
+    document.addEventListener("pointercancel", hideCursor, { passive: true });
+    document.addEventListener("visibilitychange", onVisibilityChange);
+    window.addEventListener("blur", hideCursor);
     return () => {
-      document.documentElement.classList.remove("custom-cursor-active");
-      window.cancelAnimationFrame(animationFrame);
+      hideCursor();
       window.removeEventListener("pointermove", onPointerMove);
-      window.removeEventListener("pointerenter", onPointerMove);
+      document.removeEventListener("pointerover", onPointerMove);
+      document.removeEventListener("pointerout", onPointerOut);
       document.removeEventListener("pointerdown", onPointerDown);
       document.removeEventListener("pointerup", onPointerUp);
-      document.removeEventListener("mouseleave", onPointerLeave);
-      window.removeEventListener("blur", onPointerLeave);
+      document.removeEventListener("pointercancel", hideCursor);
+      document.removeEventListener("visibilitychange", onVisibilityChange);
+      window.removeEventListener("blur", hideCursor);
     };
   }, []);
 
