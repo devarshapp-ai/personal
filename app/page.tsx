@@ -196,7 +196,7 @@ export default function Home() {
 
     const fetchVisitorCount = () => {
       fetch(
-        `${origin}/counter/TOTAL.json?start=2026-08-22`,
+        `${origin}/counter/TOTAL.json?start=2026-08-21`,
         {
           signal: controller.signal,
           referrerPolicy: "no-referrer",
