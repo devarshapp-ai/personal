@@ -195,5 +195,8 @@ test("does not load mutable third-party analytics JavaScript", async () => {
   assert.match(page, /pixel\.onerror = fetchVisitorCount/);
   assert.match(page, /new URLSearchParams/);
   assert.match(page, /r:\s*document\.referrer/);
+  assert.match(page, /new URLSearchParams\(window\.location\.search\)/);
+  assert.match(page, /"utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term"/);
+  assert.match(page, /analyticsParams\.set\("q", campaignQuery\)/);
   assert.doesNotMatch(page, /encodeURIComponent\("TOTAL"\)/);
 });

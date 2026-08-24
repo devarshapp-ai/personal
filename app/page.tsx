@@ -220,6 +220,19 @@ export default function Home() {
       r: document.referrer,
       rnd: Date.now().toString(),
     });
+
+    const campaignParams = new URLSearchParams();
+    const currentParams = new URLSearchParams(window.location.search);
+    ["utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term"].forEach(
+      (key) => {
+        const value = currentParams.get(key);
+        if (value) campaignParams.set(key, value);
+      },
+    );
+
+    const campaignQuery = campaignParams.toString();
+    if (campaignQuery) analyticsParams.set("q", campaignQuery);
+
     pixel.src = `${origin}/count?${analyticsParams.toString()}`;
 
     const fallbackTimer = window.setTimeout(fetchVisitorCount, 1500);
