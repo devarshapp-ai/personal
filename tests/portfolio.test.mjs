@@ -189,9 +189,11 @@ test("does not load mutable third-party analytics JavaScript", async () => {
   assert.match(page, /goatcounter\.com/);
   assert.match(page, /\/counter\/TOTAL\.json/);
   assert.match(page, /setInterval\(fetchVisitorCount/);
-  assert.match(page, /\.json\?start=2026-08-22/);
+  assert.match(page, /\.json\?start=2026-08-21/);
   assert.match(page, /cache:\s*"no-store"/);
   assert.match(page, /pixel\.onload = fetchVisitorCount/);
   assert.match(page, /pixel\.onerror = fetchVisitorCount/);
+  assert.match(page, /new URLSearchParams/);
+  assert.match(page, /r:\s*document\.referrer/);
   assert.doesNotMatch(page, /encodeURIComponent\("TOTAL"\)/);
 });

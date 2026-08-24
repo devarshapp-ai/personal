@@ -214,7 +214,13 @@ export default function Home() {
     pixel.referrerPolicy = "no-referrer";
     pixel.onload = fetchVisitorCount;
     pixel.onerror = fetchVisitorCount;
-    pixel.src = `${origin}/count?p=${encodeURIComponent(window.location.pathname)}&t=${encodeURIComponent(document.title)}&rnd=${Date.now()}`;
+    const analyticsParams = new URLSearchParams({
+      p: window.location.pathname,
+      t: document.title,
+      r: document.referrer,
+      rnd: Date.now().toString(),
+    });
+    pixel.src = `${origin}/count?${analyticsParams.toString()}`;
 
     const fallbackTimer = window.setTimeout(fetchVisitorCount, 1500);
     const refreshTimer = window.setInterval(fetchVisitorCount, 15 * 60 * 1000);
