@@ -231,7 +231,7 @@ export default function Home() {
     );
 
     const campaignQuery = campaignParams.toString();
-    if (campaignQuery) analyticsParams.set("q", campaignQuery);
+    if (campaignQuery) analyticsParams.set("q", `?${campaignQuery}`);
 
     pixel.src = `${origin}/count?${analyticsParams.toString()}`;
 
